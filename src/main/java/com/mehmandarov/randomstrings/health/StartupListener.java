@@ -16,6 +16,8 @@ public class StartupListener implements Resource {
         Core.getGlobalContext().register(StartupListener.this);
     }
 
+    private long fibonacciNumber = 0;
+
     public void init(@Observes
                      @Initialized(ApplicationScoped.class) Object init) {
         System.out.println("*** ****** ***StartupListener initialized");
@@ -23,7 +25,11 @@ public class StartupListener implements Resource {
         if (timestamp != null) {
             long started = Long.parseLong(timestamp);
             double elapsed = Instant.now().toEpochMilli() - started;
+
+            fibonacciNumber = fibonacci(42);
             System.out.println("<======> STARTUP: Elapsed time (s): " + elapsed/1_000);
+
+            System.out.println("<======> STARTUP: Fibonacci number: " + fibonacciNumber);
         }
     }
 
@@ -46,6 +52,16 @@ public class StartupListener implements Resource {
             long started = Long.parseLong(timestamp);
             double elapsed = Instant.now().toEpochMilli() - started;
             System.out.println("<======> RESTORE: Elapsed time (s): " + elapsed/1_000);
+
+            System.out.println("<======> RESTORE: Fibonacci number: " + fibonacciNumber);
         }
     }
+
+    private static long fibonacci(int n) {
+        if (n <= 1) {
+            return n;
+        }
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+
 }
